@@ -1,0 +1,36 @@
+version: '3.9'
+
+services:
+  node_backend:
+    container_name: apinode
+    image: apinode:2
+    build:
+      context: .
+    ports:
+      - "4000:4000"
+    environment:
+    #Son las variables del archvo .env, las propias del proyecto
+      - PORT=4000
+      - DB_NAME=inventario
+      - DB_USER=postgres
+      - DB_PASSWORD=Nico0804
+    # db_host se refiere al servicio que va a correr cuando inicialice la bd, es el servicio de node_db que especifica el puerto
+      - DB_HOST=node_db
+    depends_on:
+      - node_db
+  node_db:
+    container_name: node_db
+    image: "postgres:15"
+    ports:
+      - "5432:5432"
+    environment:
+    #Son las variables de la documentación de postgres en dockerhub, los valores son los propios
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=Nico0804
+      - POSTGRES_DB=inventario
+    volumes:
+    #Se extrae de la documentacion es sonde postgres guarda toda la data. 
+      - nps_data:/var/lib/postgresql/data
+
+volumes:
+  nps_data: {}
